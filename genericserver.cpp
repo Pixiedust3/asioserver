@@ -3,7 +3,8 @@
 
 template<typename Connection_handler>
 
-class asio_generic_server{
+class asio_generic_server
+{
     public:
     using shared_handler_t=std::shared_ptr<Connection_handler>;
 
@@ -38,16 +39,36 @@ class asio_generic_server{
         if(error)
         {
             return;
-        }
+        }        
         handler->start();
-         auto new_handler=std::make_shared<COnnectionHandler>(io_service_);
-         
+        auto new_handler=std::make_shared<Connection_handler>(io_service_);
     }
-
-
     int thread_count_;
     std::vector<std::thread> thread_pool_;
     boost::asio::io_service io_service_;
     boost::asio::ip::tcp::acceptor acceptor_;
 };
+class ChatHandler
+:public std::enable_shared_from_this<ChatHandler>
+{
+    public:
+    ChatHandler(boost::asio::io_service& service)
+    :service_(service)
+    ,socket_(service)
+    ,write_strand_(service)
+    {}
+    boost::asio::ip::tcp::socket& socket()
+    {
 
+    }
+    void start()
+    {
+        read_packet();
+    }
+    private:
+    boost::asio::io_service& service_;
+    boost::asio::ip::tcp::socket socket_;
+    boost::asio::io_service::strand write_strand_;
+
+
+};
