@@ -25,14 +25,15 @@ class asio_generic_server
         {
             handle_new_connection(handler,ec);
         });
-
-    }
-    for( int i{0};i<thread_count_;++i)
+        for( int i{0};i<thread_count_;++i)
     {
         thread_pool_.emplace_back([=]{
             io_service_.run();
         });
     }
+
+    }
+   
     private:
     void handle_new_connection(shared_handler_t handler,system::error_code const & error)
     {
