@@ -35,7 +35,13 @@ class asio_generic_server{
     private:
     void handle_new_connection(shared_handler_t handler,system::error_code const & error)
     {
-
+        if(error)
+        {
+            return;
+        }
+        handler->start();
+         auto new_handler=std::make_shared<COnnectionHandler>(io_service_);
+         
     }
 
 
