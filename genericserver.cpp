@@ -1,6 +1,6 @@
 #include<boost/asio.hpp>
 #include<iostream>
-
+#include <deque>
 template<typename Connection_handler>
 
 class asio_generic_server
@@ -25,14 +25,15 @@ class asio_generic_server
         {
             handle_new_connection(handler,ec);
         });
-
-    }
-    for( int i{0};i<thread_count_;++i)
+        for( int i{0};i<thread_count_;++i)
     {
         thread_pool_.emplace_back([=]{
             io_service_.run();
         });
     }
+
+    }
+   
     private:
     void handle_new_connection(shared_handler_t handler,system::error_code const & error)
     {
@@ -59,7 +60,8 @@ class ChatHandler
     {}
     boost::asio::ip::tcp::socket& socket()
     {
-
+        return socket_;
+        
     }
     void start()
     {
@@ -69,6 +71,8 @@ class ChatHandler
     boost::asio::io_service& service_;
     boost::asio::ip::tcp::socket socket_;
     boost::asio::io_service::strand write_strand_;
+    boost::asio::streambuf in_packet_;
+    std::deque<std::string> send_packet_queue;
 
 
 };
